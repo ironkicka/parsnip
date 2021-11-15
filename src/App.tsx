@@ -1,29 +1,36 @@
 import React from 'react';
 import './App.css';
 import TasksPage from "./components/TasksPage";
-import {Task} from "./types/task";
+import {MyStore} from "./types/store";
+import {connect, DispatchProp} from 'react-redux';
+import {createTask, editTask} from "./actions";
+import {TaskStatus} from "./types/task";
 
-const mockTasks:Task[] = [
-  {
-    id:1,
-    title:'Learn Redux',
-    description:'The store, actions,and resources, oh my!',
-    status:'In Progress',
-  },
-  {
-    id:2,
-    title:'Peace on Earth',
-    description:'No big deal',
-    status:'In Progress'
-  }
-]
+function App({tasks,...props}: MyStore & DispatchProp) {
 
-function App() {
-  return (
-    <div className={'main-content'}>
-      <TasksPage tasks={mockTasks}/>
-    </div>
-  );
+    const onCreateTask = ({title,description}:{title:string,description:string})=>{
+        props.dispatch(createTask({title,description}))
+    }
+
+    const onStatusChange = (id:number,status:TaskStatus)=>{
+        props.dispatch(editTask(id,{status}))
+    }
+
+    return (
+        <div className={'main-content'}>
+            <TasksPage
+                tasks={tasks}
+                onCreateTask={onCreateTask}
+                onStatusChange={onStatusChange}
+            />
+        </div>
+    );
 }
 
-export default App;
+const mapStateToProps = (state: MyStore) => {
+    return {
+        tasks: state.tasks
+    }
+}
+
+export default connect(mapStateToProps)(App);

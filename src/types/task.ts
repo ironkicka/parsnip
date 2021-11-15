@@ -15,5 +15,6 @@ export {
 }
 
 export type{
-    Task
+    Task,
+    TaskStatus
 }
