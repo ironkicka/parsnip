@@ -1,24 +1,8 @@
-import {Task} from "../types/task";
 import {MyStore} from "../types/store";
-import {TaskActions, uniqueId} from "../actions";
-
-const mockTasks:Task[] = [
-    {
-        id:uniqueId(),
-        title:'Learn Redux',
-        description:'The store, actions,and resources, oh my!',
-        status:'In Progress',
-    },
-    {
-        id:uniqueId(),
-        title:'Peace on Earth',
-        description:'No big deal',
-        status:'In Progress'
-    }
-]
+import {TaskActions} from "../actions";
 
 const initialState:MyStore = {
-    tasks:mockTasks
+    tasks:[]
 }
 
 const tasks = (state=initialState,action:TaskActions):MyStore=>{
@@ -36,6 +20,10 @@ const tasks = (state=initialState,action:TaskActions):MyStore=>{
                     }
                     return task;
                 })
+            }
+        case "FETCH_TASKS_SUCCEEDED":
+            return {
+                tasks:action.payload.tasks
             }
         default:
             return state
