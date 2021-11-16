@@ -3,7 +3,8 @@ import {TaskActions} from "../actions";
 
 export const initialTaskState:MyTaskStore = {
     isLoading:false,
-    tasks:[]
+    tasks:[],
+    error:null,
 }
 
 const tasks = (state:MyTaskStore,action:TaskActions):MyTaskStore=>{
@@ -18,6 +19,12 @@ const tasks = (state:MyTaskStore,action:TaskActions):MyTaskStore=>{
                 ...state,
                 isLoading:false,
                 tasks:action.payload.tasks
+            }
+        case "FETCH_TASKS_FAILED":
+            return{
+                ...state,
+                isLoading:false,
+                error:action.payload.error,
             }
         case "CREATE_TASK_SUCCEEDED":
             return{

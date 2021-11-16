@@ -28,9 +28,16 @@ interface FetchTasksStarted {
     type:'FETCH_TASKS_STARTED'
 }
 
+interface FetchTasksFailed {
+    type:'FETCH_TASKS_FAILED',
+    payload:{
+        error:string;
+    }
+}
+
 // export type TaskActionType = 'CREATE_TASK' | 'EDIT_TASK'|'FETCH_TASKS_SUCCEEDED'
 
-export type TaskActions = |FetchTaskSucceed|CreateTaskSucceeded|EditTaskSucceeded|FetchTasksStarted
+export type TaskActions = |FetchTaskSucceed|CreateTaskSucceeded|EditTaskSucceeded|FetchTasksStarted|FetchTasksFailed
 
 const fetchTasksSucceeded = (tasks:Task[]):FetchTaskSucceed=>{
     return{
@@ -41,15 +48,28 @@ const fetchTasksSucceeded = (tasks:Task[]):FetchTaskSucceed=>{
     }
 }
 
+const fetchTasksFailed = (error:string):FetchTasksFailed=>{
+    return {
+        type:'FETCH_TASKS_FAILED',
+        payload:{
+            error
+        }
+    }
+}
+
 const fetchTasks = ()=>{
     return (dispatch:ThunkDispatch<any, any, TaskActions>) =>{
         dispatch(fetchTaskStarted());
 
         api.fetchTasks()
             .then(resp=>{
-                setTimeout(()=>{
-                    dispatch(fetchTasksSucceeded(resp.data));
-                },2000);
+                // setTimeout(()=>{
+                //     dispatch(fetchTasksSucceeded(resp.data));
+                // },2000);
+                throw new Error('Oh No!! Unable to fetch tasks!!');
+            })
+            .catch(err=>{
+                dispatch(fetchTasksFailed(err.message))
             })
     }
 }

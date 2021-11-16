@@ -6,7 +6,8 @@ type GlobalStore = {
 
 type MyTaskStore = {
     isLoading:boolean;
-    tasks:Task[]
+    tasks:Task[];
+    error:string|null;
 }
 
 export type{

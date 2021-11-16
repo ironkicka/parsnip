@@ -6,8 +6,9 @@ import {connect} from 'react-redux';
 import {createTask, editTask, fetchTasks, TaskActions} from "./actions";
 import {TaskStatus} from "./types/task";
 import {ThunkDispatch} from "redux-thunk";
+import FlashMessage from "./components/FlashMessage";
 
-function App({isLoading,tasks,dispatch}: MyTaskStore & {dispatch:ThunkDispatch<any, any, TaskActions>}) {
+function App({isLoading,tasks,error,dispatch}: MyTaskStore & {dispatch:ThunkDispatch<any, any, TaskActions>}) {
 
     const onCreateTask = ({title,description}:{title:string,description:string})=>{
         dispatch(createTask({title,description}))
@@ -22,20 +23,24 @@ function App({isLoading,tasks,dispatch}: MyTaskStore & {dispatch:ThunkDispatch<a
     },[])
 
     return (
-        <div className={'main-content'}>
-            <TasksPage
-                tasks={tasks}
-                onCreateTask={onCreateTask}
-                onStatusChange={onStatusChange}
-                isLoading={isLoading}
-            />
+        <div className={"container"}>
+            {error && <FlashMessage message={error}/>}
+            <div className={'main-content'}>
+                <TasksPage
+                    tasks={tasks}
+                    onCreateTask={onCreateTask}
+                    onStatusChange={onStatusChange}
+                    isLoading={isLoading}
+                />
+            </div>
         </div>
+
     );
 }
 
 const mapStateToProps = (store: GlobalStore) => {
-    const {tasks,isLoading}=store.tasks;
-    return {tasks,isLoading}
+    const {tasks,isLoading,error}=store.tasks;
+    return {tasks,isLoading,error}
 }
 
 export default connect(mapStateToProps)(App);
