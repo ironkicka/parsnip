@@ -25,6 +25,10 @@ const tasks = (state=initialState,action:TaskActions):MyStore=>{
             return {
                 tasks:action.payload.tasks
             }
+        case "CREATE_TASK_SUCCEEDED":
+            return{
+                tasks:state.tasks.concat(action.payload.task)
+            }
         default:
             return state
     }

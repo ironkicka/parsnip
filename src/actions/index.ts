@@ -29,25 +29,21 @@ interface FetchTaskSucceed {
     }
 }
 
+interface CreateTaskSucceeded {
+    type:"CREATE_TASK_SUCCEEDED",
+    payload:{
+        task:Task
+    }
+}
+
 export type TaskActionType = 'CREATE_TASK' | 'EDIT_TASK'|'FETCH_TASKS_SUCCEEDED'
 
-export type TaskActions = CreateTask|EditTask|FetchTaskSucceed
+export type TaskActions = CreateTask|EditTask|FetchTaskSucceed|CreateTaskSucceeded
 
 let _id = 1;
 
 export const uniqueId = () => {
     return _id++;
-}
-const createTask = ({title, description}: { title: string, description: string }):CreateTask=> {
-    return {
-        type: 'CREATE_TASK',
-        payload: {
-            id:uniqueId(),
-            title,
-            description,
-            status:'UnStarted'
-        }
-    }
 }
 
 const editTask = (id:number,{status}:{status:TaskStatus}):EditTask=>{
@@ -75,6 +71,23 @@ const fetchTasks = ()=>{
             .then(resp=>{
                 dispatch(fetchTasksSucceeded(resp.data));
             })
+    }
+}
+
+const createTaskSucceeded = (task:Task):CreateTaskSucceeded=>{
+    return {
+        type:"CREATE_TASK_SUCCEEDED",
+        payload:{
+            task,
+        }
+    }
+}
+
+const createTask = ({title,description,status='UnStarted'}:{title:string,description:string,status?:TaskStatus})=>{
+    return (dispatch:ThunkDispatch<any, any, TaskActions>)=>{
+        api.createTask({title,description,status}).then(resp=>{
+            dispatch(createTaskSucceeded(resp.data))
+        })
     }
 }
 
