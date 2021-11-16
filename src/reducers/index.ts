@@ -1,34 +1,42 @@
-import {MyStore} from "../types/store";
+import {MyTaskStore} from "../types/store";
 import {TaskActions} from "../actions";
 
-const initialState:MyStore = {
+export const initialTaskState:MyTaskStore = {
+    isLoading:false,
     tasks:[]
 }
 
-const tasks = (state=initialState,action:TaskActions):MyStore=>{
+const tasks = (state:MyTaskStore,action:TaskActions):MyTaskStore=>{
     switch(action.type){
-        case "CREATE_TASK":
-            return {tasks:state.tasks.concat(action.payload)}
-        case "EDIT_TASK":
-            const {payload} = action;
-            return {
-                tasks:state.tasks.map(task=>{
-                    if(task.id===payload.id){
-                        const newTask = {...task}
-                        newTask.status = payload.status
-                        return newTask;
-                    }
-                    return task;
-                })
+        case "FETCH_TASKS_STARTED":
+            return{
+                ...state,
+                isLoading:true,
             }
         case "FETCH_TASKS_SUCCEEDED":
             return {
+                ...state,
+                isLoading:false,
                 tasks:action.payload.tasks
             }
         case "CREATE_TASK_SUCCEEDED":
             return{
+                ...state,
                 tasks:state.tasks.concat(action.payload.task)
             }
+        case "EDIT_TASK_SUCCEEDED":
+            const {payload} = action;
+            const nextTasks = state.tasks.map(task=>{
+                    if(task.id===payload.task.id){
+                        return payload.task
+                    }
+                    return task;
+                })
+            return {
+                ...state,
+                tasks:nextTasks
+            }
+
         default:
             return state
     }

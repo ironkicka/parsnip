@@ -1,9 +1,15 @@
 import {Task} from "./task";
 
-type MyStore = {
+type GlobalStore = {
+    tasks:MyTaskStore
+}
+
+type MyTaskStore = {
+    isLoading:boolean;
     tasks:Task[]
 }
 
 export type{
-    MyStore
+    GlobalStore,
+    MyTaskStore
 }

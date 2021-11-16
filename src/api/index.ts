@@ -18,7 +18,12 @@ const createTask = (params:{title:string,description:string,status:TaskStatus})=
     return client.post('/tasks',params);
 }
 
+const editTask = (id:number,params:{title:string,description:string,status:TaskStatus})=>{
+    return client.put(`${API_BASE_URL}/tasks/${id}`,params);
+}
+
 export {
     fetchTasks,
-    createTask
+    createTask,
+    editTask
 }

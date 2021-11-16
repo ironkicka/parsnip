@@ -4,13 +4,22 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {applyMiddleware, createStore} from "redux";
-import tasks from "./reducers";
+import tasksReducer, {initialTaskState} from "./reducers";
 import {Provider} from "react-redux";
 import {composeWithDevTools} from "redux-devtools-extension";
 import thunk from "redux-thunk";
 
+const initialState = {
+    tasks:initialTaskState
+}
+
+const rootReducer = (state=initialState,action:any)=>{
+    return{
+        tasks:tasksReducer(state.tasks,action)
+    }
+}
 const store = createStore(
-    tasks,
+    rootReducer,
     composeWithDevTools(applyMiddleware(thunk))
 );
 
